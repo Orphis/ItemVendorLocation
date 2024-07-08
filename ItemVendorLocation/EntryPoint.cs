@@ -341,6 +341,7 @@ public class EntryPoint : IDalamudPlugin
 
         Service.ChatTwoIpc.OnOpenChatTwoItemContextMenu -= OnOpenChatTwoItemContextMenu;
         Service.ChatTwoIpc.Disable();
+        Service.ItemVendorLocationIpc.Dispose();
         Service.HighlightObject.Dispose();
 
         _ = Service.CommandManager.RemoveHandler(_commandName);
