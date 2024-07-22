@@ -13,14 +13,7 @@ namespace ItemVendorLocation.Models
     [Sheet("SpecialShop")]
     public class SpecialShopCustom : SpecialShop
     {
-        private readonly Dictionary<int, uint> currencies = new()
-        {
-            { 1, 28 },
-            { 2, 33913 },
-            { 4, 33914 },
-            { 6, 41784 },
-            { 7, 41785 },
-        };
+        private readonly static Dictionary<int, uint> currencies = new();
 
         private readonly Dictionary<int, int> Tomestones = new();
 
@@ -29,6 +22,7 @@ namespace ItemVendorLocation.Models
         public override void PopulateData(RowParser parser, GameData lumina, Language language)
         {
             base.PopulateData(parser, lumina, language);
+            LoadCurrencies();
 
             // Quinnana's special shops use 4, tomestones, when they need to use 16, items
             // Not sure how the game is displaying scrips instead of tomestones given this
@@ -93,6 +87,19 @@ namespace ItemVendorLocation.Models
                         },
                     },
                 };
+            }
+        }
+
+        private void LoadCurrencies()
+        {
+            if (currencies.Count > 0) return;
+
+            unsafe
+            {
+                foreach (var specialItem in FFXIVClientStructs.FFXIV.Client.Game.CurrencyManager.Instance()->SpecialItemBucket)
+                {
+                    currencies.Add(specialItem.Item2.SpecialId, specialItem.Item1);
+                }
             }
         }
 
